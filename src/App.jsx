@@ -1,7 +1,12 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import PitchDetector from "./components/PitchDetector";
 
 function App() {
-  return <div>Hello world!</div>;
+  return (
+    <div>
+      <PitchDetector />
+    </div>
+  );
 }
 
 export default App;
