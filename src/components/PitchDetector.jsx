@@ -1,105 +1,3 @@
-// import React, { useState } from "react";
-
-// const PitchDetector = () => {
-//   const [pitch, setPitch] = useState(null);
-
-//   const handleStartDetection = () => {
-//     let audioContext = new (window.AudioContext || window.webkitAudioContext)();
-//     let analyser = audioContext.createAnalyser();
-//     let mediaStreamSource = null;
-
-//     navigator.mediaDevices
-//       .getUserMedia({ audio: true })
-//       .then(function (stream) {
-//         mediaStreamSource = audioContext.createMediaStreamSource(stream);
-//         mediaStreamSource.connect(analyser);
-//         updatePitch();
-//       })
-//       .catch(function (err) {
-//         console.error("Error accessing microphone", err);
-//       });
-
-//     const updatePitch = () => {
-//       const bufferLength = analyser.fftSize;
-//       const dataArray = new Float32Array(bufferLength);
-
-//       analyser.getFloatTimeDomainData(dataArray);
-
-//       let ac = autoCorrelate(dataArray, audioContext.sampleRate);
-
-//       if (ac !== -1) {
-//         let pitch = audioContext.sampleRate / ac;
-//         setPitch(pitch);
-//       } else {
-//         setPitch(null);
-//       }
-
-//       setTimeout(updatePitch, 100); // Update pitch every 100ms
-//     };
-
-//     const autoCorrelate = (buf, sampleRate) => {
-//       let SIZE = buf.length;
-//       let MAX_SAMPLES = Math.floor(SIZE / 2);
-//       let best_offset = -1;
-//       let best_correlation = 0;
-//       let rms = 0;
-//       let foundGoodCorrelation = false;
-//       let correlations = new Array(MAX_SAMPLES);
-
-//       for (let i = 0; i < SIZE; i++) {
-//         let val = buf[i];
-//         rms += val * val;
-//       }
-//       rms = Math.sqrt(rms / SIZE);
-//       if (rms < 0.01)
-//         // not enough signal
-//         return -1;
-
-//       let lastCorrelation = 1;
-//       for (let offset = 0; offset < MAX_SAMPLES; offset++) {
-//         let correlation = 0;
-
-//         for (let i = 0; i < MAX_SAMPLES; i++) {
-//           correlation += Math.abs(buf[i] - buf[i + offset]);
-//         }
-//         correlation = 1 - correlation / MAX_SAMPLES;
-//         correlations[offset] = correlation; // store it, for the tweaking we need to do below.
-//         if (correlation > 0.9 && correlation > lastCorrelation) {
-//           foundGoodCorrelation = true;
-//           if (correlation > best_correlation) {
-//             best_correlation = correlation;
-//             best_offset = offset;
-//           }
-//         } else if (foundGoodCorrelation) {
-//           let shift =
-//             (correlations[best_offset + 1] - correlations[best_offset - 1]) /
-//             correlations[best_offset];
-//           return sampleRate / (best_offset + 8 * shift);
-//         }
-//         lastCorrelation = correlation;
-//       }
-//       if (best_correlation > 0.01) {
-//         return sampleRate / best_offset;
-//       }
-//       return -1;
-//     };
-//   };
-
-//   return (
-//     <div>
-//       <h2>Pitch Detector</h2>
-//       <button onClick={handleStartDetection}>Start Detection</button>
-//       {pitch !== null ? (
-//         <p>Detected Pitch: {pitch.toFixed(2)} Hz</p>
-//       ) : (
-//         <p>No pitch detected</p>
-//       )}
-//     </div>
-//   );
-// };
-
-// export default PitchDetector;
-
 import React, { useState } from "react";
 
 const PitchDetector = () => {
@@ -229,10 +127,21 @@ const PitchDetector = () => {
   };
 
   return (
-    <div>
-      <h2>Pitch Detector</h2>
-      <button onClick={handleStartDetection}>Start Detection</button>
-      {note !== null ? <p>Detected Note: {note}</p> : <p>No note detected</p>}
+    <div className="max-w-full h-screen bg-lime-300 relative flex justify-center">
+      <div className="absolute mt-[20%] flex flex-col">
+        <h2 className="poetsen text-[4rem]">Pitch Detector</h2>
+        <button
+          className="cursor-pointer focus:text-white"
+          onClick={handleStartDetection}
+        >
+          Start Detection
+        </button>
+        {note !== null ? (
+          <p className="text-center poetsen text-[5rem]">{note}</p>
+        ) : (
+          <p className="text-center poetsen text-[5rem]">...</p>
+        )}
+      </div>
     </div>
   );
 };
